@@ -1,0 +1,42 @@
+version: '3'
+services:
+    php_fpm:
+        build:
+            context: .
+            dockerfile: docker/php-fpm/Dockerfile
+        ports:
+            - 8000:80
+        volumes:
+            - .:/var/www/html
+        depends_on:
+            - db
+        env_file:
+            - .env
+    db:
+        container_name: postgres
+        image: postgres:15
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        env_file:
+            - .env
+    nginx:
+        build:
+            context: .
+            dockerfile: docker/nginx/Dockerfile
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - .:/var/www/html
+        depends_on:
+            - php_fpm
+        restart: unless-stopped
+volumes:
+    postgres:
+        driver: local

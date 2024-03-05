@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Auth\UserRegisterDTO;
+use App\Exceptions\Auth\UserAlreadyExistsException;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Resources\UserResource;
 use App\Services\Auth\AuthService;
@@ -30,6 +31,9 @@ class AuthController extends Controller
         return ApiResponse::success([]);
     }
 
+    /**
+     * @throws UserAlreadyExistsException
+     */
     public function register(Request $request): JsonResponse
     {
         $validatedData = $request->validate([

@@ -18,3 +18,6 @@ annotate:
 	docker-compose exec app php artisan ide-helper:generate
 	docker-compose exec app php artisan ide-helper:meta
 	docker-compose exec app php artisan ide-helper:models --write-mixin
+
+test:
+	docker-compose exec app php artisan test

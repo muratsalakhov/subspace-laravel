@@ -14,8 +14,8 @@ class ApiResponse
     {
         $response = [
             'success' => true,
-            'data' => $data,
             'message' => $message,
+            'data' => $data,
         ];
 
         return response()->json($response, $code);
@@ -25,8 +25,8 @@ class ApiResponse
     {
         $response = [
             'success' => false,
-            'data' => $data,
             'message' => $message,
+            'data' => $data,
         ];
 
         return response()->json($response, $code);

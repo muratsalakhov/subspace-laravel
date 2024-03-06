@@ -23,12 +23,31 @@ class AuthController extends Controller
 
     public function login(Request $request): JsonResponse
     {
-        return ApiResponse::success([]);
+        $validatedData = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = $this->authService->login($validatedData['email'], $validatedData['password']);
+
+        if (!$user) {
+            return ApiResponse::error(null, 'Неверный email или пароль', 401);
+        }
+
+        return $this->getAuthResponse($user);
     }
 
-    public function logout(Request $request): JsonResponse
+    public function logout(): JsonResponse
     {
-        return ApiResponse::success([]);
+        $user = Auth::user();
+
+        if (!$user) {
+            return ApiResponse::error(null, 'Пользователь не авторизован', 401);
+        }
+
+        $this->authService->logout($user);
+
+        return ApiResponse::success([], 'Пользователь вышел из системы');
     }
 
     /**
@@ -52,6 +71,11 @@ class AuthController extends Controller
 
         Auth::login($user);
 
+        return $this->getAuthResponse($user);
+    }
+
+    private function getAuthResponse($user): JsonResponse
+    {
         return ApiResponse::success([
             'token' => $this->authService->createToken($user)->plainTextToken,
             'user' => UserResource::make($user)

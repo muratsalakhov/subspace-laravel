@@ -9,7 +9,9 @@ use App\Models\Task;
 use App\Models\Timetable;
 use App\Models\TimetableSlot;
 use App\Models\User;
+use DB;
 use Illuminate\Auth\Events\Registered;
+use Log;
 
 class CreateDefaultUserData
 {
@@ -35,20 +37,41 @@ class CreateDefaultUserData
         /* @var User $user */
         $user = $event->user;
 
-        // todo: transaction
-        //      в случае ошибки полная отмена и дальнейшая обработка
+        // выходим если пользователь уже был инициализирован
+        if ($user->is_initialized) {
+            return;
+        }
 
-        // заметки
-        $this->createNotes($user);
+        // начало транзакции
+        DB::beginTransaction();
 
-        // список задач
-        $this->createTasks($user);
+        try {
+            // заметки
+            $this->createNotes($user);
 
-        // привычки
-        $this->createHabits($user);
+            // список задач
+            $this->createTasks($user);
 
-        // расписание
-        $this->createTimetables($user);
+            // привычки
+            $this->createHabits($user);
+
+            // расписание
+            $this->createTimetables($user);
+
+            $user->is_initialized = true;
+            $user->save();
+
+            DB::commit();
+
+            Log::info("Пользователь с id = {$user->id} успешно инициализирован");
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+
+            Log::error(
+                "Ошибка при инициализации пользователя с id = {$user->id}:
+                {$exception->getMessage()} | {$exception->getTraceAsString()}"
+            );
+        }
     }
 
     private function createNotes(User $user): void
@@ -92,6 +115,8 @@ class CreateDefaultUserData
                 $habitChecks[] = [
                     'habit_id' => $habit->id,
                     'is_completed' => $j <= $i, // заполняем лесенкой 1 галочка для 1, 1 и 2 для 2 и т.д.
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ];
             }
             HabitCheck::insert($habitChecks);
@@ -111,7 +136,9 @@ class CreateDefaultUserData
                 $timetableSlots[] = [
                     'timetable_id' => $timetableDay->id,
                     'slot_number' => $slot,
-                    'description' => ''
+                    'description' => '',
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ];
             }
             TimetableSlot::insert($timetableSlots);

@@ -13,6 +13,14 @@ class TimetableSlot extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'timetable_id',
+        'slot_number',
+        'description',
+        'created_at',
+        'updated_at',
+    ];
+
     public function timetable(): BelongsTo
     {
         return $this->belongsTo(Timetable::class);

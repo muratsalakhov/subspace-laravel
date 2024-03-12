@@ -19,6 +19,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_initialized'
     ];
 
     public function tasks(): HasMany

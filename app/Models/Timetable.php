@@ -14,6 +14,11 @@ class Timetable extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'day_of_week'
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

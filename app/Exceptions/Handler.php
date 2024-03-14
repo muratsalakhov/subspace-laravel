@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Http\Helpers\ApiResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -33,7 +34,8 @@ class Handler extends ExceptionHandler
         $this->renderable(function (ValidationException $e) {
             return ApiResponse::error(
                 $e->errors(),
-                'Ошибка валидации'
+                'Ошибка валидации',
+                Response::HTTP_UNPROCESSABLE_ENTITY
             );
         });
     }

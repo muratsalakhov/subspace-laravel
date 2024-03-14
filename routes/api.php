@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,5 +27,16 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         // пользователь
         Route::get('/user', [UserController::class, 'show']);
+
+        // виджет список задач
+        Route::prefix('tasks')->group(function () {
+            Route::get('/', [TaskController::class, 'index']); // получить список задач
+            Route::get('/{task}', [TaskController::class, 'show']); // получить задачу
+
+            Route::post('/', [TaskController::class, 'store']); // создать задачу
+            Route::put('/{task}', [TaskController::class, 'update']); // изменить задачу
+            Route::patch('/{task}', [TaskController::class, 'updateStatus']); // изменить статус задачи
+            Route::delete('/{task}', [TaskController::class, 'destroy']); // удалить задачу
+        });
     });
 });

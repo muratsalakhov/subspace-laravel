@@ -7,12 +7,17 @@ use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Knuckles\Scribe\Attributes\BodyParam;
+use Knuckles\Scribe\Attributes\Endpoint;
+use Knuckles\Scribe\Attributes\Group;
 use Symfony\Component\HttpFoundation\Response;
 
+#[Group('Задачи')]
 class TaskController extends Controller
 {
     use RequiresAuthenticatedUser;
 
+    #[Endpoint('Список задач', 'Получить список всех задач пользователя')]
     public function index(): JsonResponse
     {
         $this->authorize('viewAny', Task::class);
@@ -24,6 +29,7 @@ class TaskController extends Controller
         );
     }
 
+    #[Endpoint('Просмотр задачи', 'Получить детальную информацию о задаче')]
     public function show(Task $task): JsonResponse
     {
         $this->authorize('view', $task);
@@ -33,6 +39,10 @@ class TaskController extends Controller
         );
     }
 
+    #[
+        Endpoint('Создание задачи', 'Создать новую задачу'),
+        BodyParam('name', 'string', 'Название задачи, макс 255 символов')
+    ]
     public function store(Request $request): JsonResponse
     {
         $this->authorize('create', Task::class);
@@ -50,6 +60,11 @@ class TaskController extends Controller
         );
     }
 
+    #[
+        Endpoint('Обновление задачи', 'Обновить данные задачи'),
+        BodyParam('name', 'string', 'Название задачи, макс 255 символов'),
+        BodyParam('is_completed', 'boolean', 'Является ли выполненной')
+    ]
     public function update(Request $request, Task $task): JsonResponse
     {
         $this->authorize('update', $task);
@@ -66,6 +81,10 @@ class TaskController extends Controller
         );
     }
 
+    #[
+        Endpoint('Изменение статуса задачи', 'Обновить статус задачи'),
+        BodyParam('is_completed', 'boolean', 'Является ли выполненной')
+    ]
     public function updateStatus(Request $request, Task $task): JsonResponse
     {
         $this->authorize('updateStatus', $task);
@@ -81,6 +100,7 @@ class TaskController extends Controller
         );
     }
 
+    #[Endpoint('Удаление задачи', 'Удалить задачу')]
     public function destroy(Task $task): JsonResponse
     {
         $this->authorize('delete', $task);

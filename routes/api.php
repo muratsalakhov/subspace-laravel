@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -37,6 +38,17 @@ Route::prefix('v1')->group(function () {
             Route::put('/{task}', [TaskController::class, 'update']); // изменить задачу
             Route::patch('/{task}', [TaskController::class, 'updateStatus']); // изменить статус задачи
             Route::delete('/{task}', [TaskController::class, 'destroy']); // удалить задачу
+        });
+
+        // виджет заметки
+        Route::prefix('notes')->group(function () {
+            Route::get('/', [NoteController::class, 'index']); // получить список заметок
+            Route::get('/{note}', [NoteController::class, 'show']); // получить заметку
+
+            Route::post('/', [NoteController::class, 'store']); // создать заметку
+            Route::patch('/{note}/title', [NoteController::class, 'updateTitle']); // изменить название заметки
+            Route::patch('/{note}/body', [NoteController::class, 'updateBody']); // изменить содержимое заметки
+            Route::delete('/{note}', [NoteController::class, 'destroy']); // удалить заметку
         });
     });
 });

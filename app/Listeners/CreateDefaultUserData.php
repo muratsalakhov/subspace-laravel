@@ -3,11 +3,9 @@
 namespace App\Listeners;
 
 use App\Models\Habit;
-use App\Models\HabitCheck;
 use App\Models\Note;
 use App\Models\Task;
 use App\Models\Timetable;
-use App\Models\TimetableSlot;
 use App\Models\User;
 use DB;
 use Illuminate\Auth\Events\Registered;
@@ -16,8 +14,6 @@ use Log;
 class CreateDefaultUserData
 {
     private const HABITS_COUNT = 3;
-
-    private const TIMETABLE_SLOTS_COUNT = 7;
 
     /**
      * Create the event listener.
@@ -113,22 +109,10 @@ class CreateDefaultUserData
     private function createTimetables(User $user): void
     {
         for ($day = 1; $day <= 7; $day++) { // неделя
-            $timetableDay = Timetable::create([
+            Timetable::create([
                 'user_id' => $user->id,
                 'day_of_week' => $day
             ]);
-
-            $timetableSlots = [];
-            for ($slot = 1; $slot <= self::TIMETABLE_SLOTS_COUNT; $slot++) {
-                $timetableSlots[] = [
-                    'timetable_id' => $timetableDay->id,
-                    'slot_number' => $slot,
-                    'description' => '',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
-            TimetableSlot::insert($timetableSlots);
         }
     }
 }

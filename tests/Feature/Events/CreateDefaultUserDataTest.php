@@ -19,7 +19,7 @@ class CreateDefaultUserDataTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testHandleCreatesDefaultDataForNewUser(): void
+    public function test_handle_creates_default_data_for_new_user(): void
     {
         // подготовка
         Event::fake();
@@ -53,7 +53,7 @@ class CreateDefaultUserDataTest extends TestCase
         $this->assertTrue($user->fresh()->is_initialized);
     }
 
-    public function testHandleDoesNotCreateDataIfUserAlreadyInitialized(): void
+    public function test_handle_does_not_create_data_if_user_already_initialized(): void
     {
         // подготовка
         Event::fake();

@@ -17,8 +17,6 @@ class CreateDefaultUserData
 {
     private const HABITS_COUNT = 3;
 
-    private const HABIT_CHECKS_COUNT = 18;
-
     private const TIMETABLE_SLOTS_COUNT = 7;
 
     /**
@@ -105,21 +103,10 @@ class CreateDefaultUserData
     private function createHabits(User $user): void
     {
         for ($i = 1; $i <= self::HABITS_COUNT; $i++) {
-            $habit = Habit::create([
+            Habit::create([
                 'user_id' => $user->id,
                 'name' => "Привычка {$i}"
             ]);
-
-            $habitChecks = [];
-            for ($j = 1; $j <= self::HABIT_CHECKS_COUNT; $j++) {
-                $habitChecks[] = [
-                    'habit_id' => $habit->id,
-                    'is_completed' => $j <= $i, // заполняем лесенкой 1 галочка для 1, 1 и 2 для 2 и т.д.
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
-            HabitCheck::insert($habitChecks);
         }
     }
 

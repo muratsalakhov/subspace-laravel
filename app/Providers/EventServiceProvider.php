@@ -24,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         HabitCreated::class => [
             CreateHabitChecks::class
         ],
+        TimetableCreated::class => [
+            CreateTimetableSlots::class
+        ]
     ];
 
     /**

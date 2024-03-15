@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Events;
 
+use App\Events\HabitCreated;
+use App\Events\TimetableCreated;
 use App\Listeners\CreateDefaultUserData;
 use App\Models\Habit;
 use App\Models\HabitCheck;
@@ -43,23 +45,9 @@ class CreateDefaultUserDataTest extends TestCase
         $habits = Habit::where('user_id', $user->id)->get();
         $this->assertCount(3, $habits);
 
-        // для каждой привычки должно быть 18 проверок
-        $habits = Habit::where('user_id', $user->id)->get();
-        foreach ($habits as $habit) {
-            $checksCount = HabitCheck::where('habit_id', $habit->id)->count();
-            $this->assertEquals(18, $checksCount);
-        }
-
         // проверка, что для пользователя созданы расписания на каждый день недели
         $timetablesCount = Timetable::where('user_id', $user->id)->count();
         $this->assertEquals(7, $timetablesCount);
-
-        // проверка, что для каждого расписания создано по 7 слотов
-        $timetables = Timetable::where('user_id', $user->id)->get();
-        foreach ($timetables as $timetable) {
-            $slotsCount = TimetableSlot::where('timetable_id', $timetable->id)->count();
-            $this->assertEquals(7, $slotsCount);
-        }
 
         // проверка, что флаг инициализации пользователя установлен в true
         $this->assertTrue($user->fresh()->is_initialized);

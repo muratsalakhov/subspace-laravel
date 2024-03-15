@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\HabitCreated;
+use App\Events\TimetableCreated;
 use App\Listeners\CreateDefaultUserData;
+use App\Listeners\CreateHabitChecks;
+use App\Listeners\CreateTimetableSlots;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             CreateDefaultUserData::class
+        ],
+        HabitCreated::class => [
+            CreateHabitChecks::class
         ],
     ];
 

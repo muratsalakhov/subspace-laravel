@@ -62,11 +62,7 @@ Route::prefix('v1')->group(function () {
             Route::patch('/{habit}', [HabitController::class, 'update']); // обновить привычку
             Route::delete('/{habit}', [HabitController::class, 'destroy']); // удалить привычку
 
-            // выполнение привычек todo: подкорректировать на изменение вместо post/delete
-//            Route::prefix('/{habit}/completions')->group(function () {
-//                Route::post('/', [HabitCheckController::class, 'store']); // добавить о выполнении привычки
-//                Route::delete('/{completion}', [HabitCheckController::class, 'destroy']); // удалить запись о выполнении привычки
-//            });
+            Route::patch('/{habit}/checks/{check}', [HabitController::class, 'updateCheck']); // обновить галочку
         });
     });
 });

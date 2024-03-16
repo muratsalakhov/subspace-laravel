@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Resources\HabitResource;
 use App\Models\Habit;
+use App\Models\HabitCheck;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Knuckles\Scribe\Attributes\BodyParam;
@@ -87,5 +88,25 @@ class HabitController extends Controller
         $habit->delete();
 
         return ApiResponse::success([], code: Response::HTTP_NO_CONTENT);
+    }
+
+    #[
+        Endpoint('Обновление галочки', 'Обновить данные гачлоки'),
+        BodyParam('is_completed', 'boolean', 'Статус галочки')
+    ]
+    public function updateCheck(Request $request, Habit $habit, HabitCheck $check): JsonResponse
+    {
+        $this->authorize('updateCheck', [$check, $habit]);
+
+        $validatedData = $this->validate($request, [
+           'is_completed' => 'required|boolean'
+        ]);
+
+        $check->update($validatedData);
+        $habit->refresh();
+
+        return ApiResponse::success(
+            HabitResource::make($habit)
+        );
     }
 }

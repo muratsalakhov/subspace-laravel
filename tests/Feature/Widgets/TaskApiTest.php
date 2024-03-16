@@ -11,10 +11,6 @@ class TaskApiTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * Какое-то описание
-     * @return void
-     */
     public function test_index_returns_tasks_for_authenticated_user(): void
     {
         // подготовка

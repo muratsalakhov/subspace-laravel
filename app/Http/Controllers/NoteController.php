@@ -10,14 +10,18 @@ use Illuminate\Http\Request;
 use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Endpoint;
 use Knuckles\Scribe\Attributes\Group;
+use Knuckles\Scribe\Attributes\ResponseFromApiResource;
 use Symfony\Component\HttpFoundation\Response;
 
-#[Group('Заметки')]
+#[Group('Виджет "Заметки"')]
 class NoteController extends Controller
 {
     use RequiresAuthenticatedUser;
 
-    #[Endpoint('Список заметок', 'Получить список всех заметок пользователя')]
+    #[
+        Endpoint('Список заметок', 'Получить список всех заметок пользователя'),
+        ResponseFromApiResource(NoteResource::class, Note::class, collection: true)
+    ]
     public function index(): JsonResponse
     {
         $this->authorize('viewAny', Note::class);
@@ -29,7 +33,10 @@ class NoteController extends Controller
         );
     }
 
-    #[Endpoint('Просмотр заметки', 'Получить детальную информацию о заметке')]
+    #[
+        Endpoint('Просмотр заметки', 'Получить детальную информацию о заметке'),
+        ResponseFromApiResource(NoteResource::class, Note::class)
+    ]
     public function show(Note $note): JsonResponse
     {
         $this->authorize('view', $note);
@@ -42,7 +49,8 @@ class NoteController extends Controller
     #[
         Endpoint('Создание заметки', 'Создать новую заметку'),
         BodyParam('title', 'string', 'Название заметки, макс 255 символов'),
-        BodyParam('body', 'string', 'Содержимое заметки')
+        BodyParam('body', 'string', 'Содержимое заметки'),
+        ResponseFromApiResource(NoteResource::class, Note::class)
     ]
     public function store(Request $request): JsonResponse
     {
@@ -65,6 +73,7 @@ class NoteController extends Controller
     #[
         Endpoint('Обновление названия', 'Обновить название заметки'),
         BodyParam('title', 'string', 'Название заметки, макс 255 символов'),
+        ResponseFromApiResource(NoteResource::class, Note::class)
     ]
     public function updateTitle(Request $request, Note $note): JsonResponse
     {
@@ -84,6 +93,7 @@ class NoteController extends Controller
     #[
         Endpoint('Обновление содержимого', 'Обновить содержимое заметки'),
         BodyParam('body', 'string', 'Содержимое заметки'),
+        ResponseFromApiResource(NoteResource::class, Note::class)
     ]
     public function updateBody(Request $request, Note $note): JsonResponse
     {

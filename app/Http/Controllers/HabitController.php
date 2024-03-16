@@ -11,14 +11,18 @@ use Illuminate\Http\Request;
 use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Endpoint;
 use Knuckles\Scribe\Attributes\Group;
+use Knuckles\Scribe\Attributes\ResponseFromApiResource;
 use Symfony\Component\HttpFoundation\Response;
 
-#[Group('Привычки')]
+#[Group('Виджет "Привычки"')]
 class HabitController extends Controller
 {
     use RequiresAuthenticatedUser;
 
-    #[Endpoint('Список привычек', 'Получить список всех привычек пользователя')]
+    #[
+        Endpoint('Список привычек', 'Получить список всех привычек пользователя'),
+        ResponseFromApiResource(HabitResource::class, Habit::class, collection: true)
+    ]
     public function index(): JsonResponse
     {
         $this->authorize('viewAny', Habit::class);
@@ -30,7 +34,10 @@ class HabitController extends Controller
         );
     }
 
-    #[Endpoint('Просмотр привычки', 'Получить детальную информацию о привычке')]
+    #[
+        Endpoint('Просмотр привычки', 'Получить детальную информацию о привычке'),
+        ResponseFromApiResource(HabitResource::class, Habit::class)
+    ]
     public function show(Habit $habit): JsonResponse
     {
         $this->authorize('view', $habit);
@@ -42,7 +49,8 @@ class HabitController extends Controller
 
     #[
         Endpoint('Создание привычки', 'Создать новую привычку'),
-        BodyParam('name', 'string', 'Название привычки, макс 255 символов')
+        BodyParam('name', 'string', 'Название привычки, макс 255 символов'),
+        ResponseFromApiResource(HabitResource::class, Habit::class)
     ]
     public function store(Request $request): JsonResponse
     {
@@ -63,7 +71,8 @@ class HabitController extends Controller
 
     #[
         Endpoint('Обновление привычки', 'Обновить данные привычки'),
-        BodyParam('name', 'string', 'Название привычки, макс 255 символов')
+        BodyParam('name', 'string', 'Название привычки, макс 255 символов'),
+        ResponseFromApiResource(HabitResource::class, Habit::class)
     ]
     public function update(Request $request, Habit $habit): JsonResponse
     {
@@ -91,8 +100,9 @@ class HabitController extends Controller
     }
 
     #[
-        Endpoint('Обновление галочки', 'Обновить данные гачлоки'),
-        BodyParam('is_completed', 'boolean', 'Статус галочки')
+        Endpoint('Обновление галочки', 'Обновить данные галочки'),
+        BodyParam('is_completed', 'boolean', 'Статус галочки'),
+        ResponseFromApiResource(HabitResource::class, Habit::class)
     ]
     public function updateCheck(Request $request, Habit $habit, HabitCheck $check): JsonResponse
     {

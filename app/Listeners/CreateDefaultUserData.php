@@ -3,11 +3,9 @@
 namespace App\Listeners;
 
 use App\Models\Habit;
-use App\Models\HabitCheck;
 use App\Models\Note;
 use App\Models\Task;
 use App\Models\Timetable;
-use App\Models\TimetableSlot;
 use App\Models\User;
 use DB;
 use Illuminate\Auth\Events\Registered;
@@ -16,10 +14,6 @@ use Log;
 class CreateDefaultUserData
 {
     private const HABITS_COUNT = 3;
-
-    private const HABIT_CHECKS_COUNT = 18;
-
-    private const TIMETABLE_SLOTS_COUNT = 7;
 
     /**
      * Create the event listener.
@@ -105,43 +99,20 @@ class CreateDefaultUserData
     private function createHabits(User $user): void
     {
         for ($i = 1; $i <= self::HABITS_COUNT; $i++) {
-            $habit = Habit::create([
+            Habit::create([
                 'user_id' => $user->id,
                 'name' => "Привычка {$i}"
             ]);
-
-            $habitChecks = [];
-            for ($j = 1; $j <= self::HABIT_CHECKS_COUNT; $j++) {
-                $habitChecks[] = [
-                    'habit_id' => $habit->id,
-                    'is_completed' => $j <= $i, // заполняем лесенкой 1 галочка для 1, 1 и 2 для 2 и т.д.
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
-            HabitCheck::insert($habitChecks);
         }
     }
 
     private function createTimetables(User $user): void
     {
         for ($day = 1; $day <= 7; $day++) { // неделя
-            $timetableDay = Timetable::create([
+            Timetable::create([
                 'user_id' => $user->id,
                 'day_of_week' => $day
             ]);
-
-            $timetableSlots = [];
-            for ($slot = 1; $slot <= self::TIMETABLE_SLOTS_COUNT; $slot++) {
-                $timetableSlots[] = [
-                    'timetable_id' => $timetableDay->id,
-                    'slot_number' => $slot,
-                    'description' => '',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
-            TimetableSlot::insert($timetableSlots);
         }
     }
 }

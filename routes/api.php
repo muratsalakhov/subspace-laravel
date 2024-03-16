@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HabitCheckController;
+use App\Http\Controllers\HabitController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -49,6 +51,18 @@ Route::prefix('v1')->group(function () {
             Route::patch('/{note}/title', [NoteController::class, 'updateTitle']); // изменить название заметки
             Route::patch('/{note}/body', [NoteController::class, 'updateBody']); // изменить содержимое заметки
             Route::delete('/{note}', [NoteController::class, 'destroy']); // удалить заметку
+        });
+
+        // виджет трекер привычек
+        Route::prefix('habits')->group(function () {
+            Route::get('/', [HabitController::class, 'index']); // получить список привычек
+            Route::get('/{habit}', [HabitController::class, 'show']); // получить информацию о привычке
+
+            Route::post('/', [HabitController::class, 'store']); // создать привычку
+            Route::patch('/{habit}', [HabitController::class, 'update']); // обновить привычку
+            Route::delete('/{habit}', [HabitController::class, 'destroy']); // удалить привычку
+
+            Route::patch('/{habit}/checks/{check}', [HabitController::class, 'updateCheck']); // обновить галочку
         });
     });
 });

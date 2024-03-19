@@ -5,6 +5,7 @@ use App\Http\Controllers\HabitCheckController;
 use App\Http\Controllers\HabitController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,18 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{habit}', [HabitController::class, 'destroy']); // удалить привычку
 
             Route::patch('/{habit}/checks/{check}', [HabitController::class, 'updateCheck']); // обновить галочку
+        });
+
+        // виджет расписания
+        Route::prefix('timetables')->group(function () {
+            Route::get('/', [TimetableController::class, 'index']); // получить список расписаний
+            Route::get('/{timetable}', [TimetableController::class, 'show']); // получить информацию о расписании
+
+            Route::post('/', [TimetableController::class, 'store']); // создать расписание
+            Route::patch('/{timetable}', [TimetableController::class, 'update']); // обновить расписание
+            Route::delete('/{timetable}', [TimetableController::class, 'destroy']); // удалить расписание
+
+            Route::patch('/{timetable}/slots/{slot}', [TimetableController::class, 'updateSlot']); // обновить слот расписания
         });
     });
 });

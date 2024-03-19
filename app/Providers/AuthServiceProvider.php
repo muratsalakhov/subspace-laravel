@@ -7,10 +7,14 @@ use App\Models\Habit;
 use App\Models\HabitCheck;
 use App\Models\Note;
 use App\Models\Task;
+use App\Models\Timetable;
+use App\Models\TimetableSlot;
 use App\Policies\HabitCheckPolicy;
 use App\Policies\HabitPolicy;
 use App\Policies\NotePolicy;
 use App\Policies\TaskPolicy;
+use App\Policies\TimetablePolicy;
+use App\Policies\TimetableSlotPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -25,6 +29,8 @@ class AuthServiceProvider extends ServiceProvider
         Note::class => NotePolicy::class,
         Habit::class => HabitPolicy::class,
         HabitCheck::class => HabitCheckPolicy::class,
+        Timetable::class => TimetablePolicy::class,
+        TimetableSlot::class => TimetableSlotPolicy::class,
     ];
 
     /**

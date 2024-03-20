@@ -1,9 +1,9 @@
 FROM php:8.3-fpm
 
-ARG HOST_USER_ID=1000
-ARG HOST_GROUP_ID=1000
+ARG HOST_USER_ID
+ARG HOST_GROUP_ID
 
-RUN adduser hostuser -u $HOST_USER_ID
+RUN if [ ${HOST_USER_ID:+1} ]; then useradd -u $HOST_USER_ID -ms /bin/bash hostuser; fi
 
 # Установите необходимые зависимости
 RUN apt-get update && apt-get install -y \

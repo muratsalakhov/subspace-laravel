@@ -31,6 +31,9 @@ RUN mkdir -p /var/www/html/.composer/cache /var/www/html/.composer && \
     chown -R www-data:www-data /var/www/html && \
     chmod -R 775 /var/www/html
 
+# Установка зависимостей composer
+RUN composer install
+
 # Генерация ключа приложения
 RUN php artisan key:generate
 
